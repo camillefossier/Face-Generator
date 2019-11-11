@@ -15,8 +15,8 @@ from torch.utils.data import Dataset, DataLoader
 
 # TODO : Gather face data
 
-SIZE = 64,64
-NB_FEATURES = 50
+SIZE = 128,128
+NB_FEATURES = 20
 
 def handle_image(input_path, output_path):
     im = Image.open(input_path)
@@ -44,6 +44,9 @@ class Net(nn.Module):
         self.lin1 = nn.Linear(NB_FEATURES, 215)
         self.lin2 = nn.Linear(215, 940)
         self.lin3 = nn.Linear(940, SIZE[0] * SIZE[1])
+        torch.nn.init.xavier_uniform(self.lin1.weight)
+        torch.nn.init.xavier_uniform(self.lin2.weight)
+        torch.nn.init.xavier_uniform(self.lin3.weight)
 
     def forward(self, x):
         x = F.relu(self.lin1(x))
@@ -79,12 +82,12 @@ class DataSet:
 if __name__ == "__main__":
     
     # ONLY TO REGENERATE : a bit long
-    #full_dataset('./PINS/PINS', './small_faces')
+    #full_dataset('../PINS/PINS', '../small_faces')
 
     # TODO : Load data as matrix
 
-    folder = './small_faces'
-    n = 5000
+    folder = '../small_faces'
+    n = 10000
     p = SIZE[0] * SIZE[1]
     pics = [f for f in os.listdir(folder) if os.path.isfile(os.path.join(folder, f))]
     data = np.zeros((n, p))
@@ -119,7 +122,7 @@ if __name__ == "__main__":
         criterion = nn.MSELoss()
         optimizer = optim.Adam(net.parameters(), lr=0.001)
 
-        for epoch in range(3):  # loop over the dataset multiple times
+        for epoch in range(2):  # loop over the dataset multiple times
 
             running_loss = 0.0
             for i, data in enumerate(data_loader, 0):

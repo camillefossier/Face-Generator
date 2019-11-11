@@ -57,5 +57,5 @@ if __name__ == '__main__':
     net = Net()
     net.load_state_dict(torch.load("./face_model.pth"))
 
-    fi = FeaturesInterface(net, 50)
+    fi = FeaturesInterface(net, 20)
     fi.mainloop()
